@@ -36,5 +36,31 @@ public class NYCDao {
 		return result;
 	}
 	
+	public List<String> trovaSSID(String borgo, String nta){
+		String sql = "select distinct ssid "
+				+ "from nyc_wifi_hotspot_locations "
+				+ "where borough=? and ntacode=? "
+				+ "order by ssid ";
+		List<String> result = new ArrayList<>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, borgo);
+			st.setString(2, nta);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				result.add(res.getString("ssid"));
+			}
+			
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("SQL Error");
+		}
+
+		return result;
+	}
+	
 	
 }
